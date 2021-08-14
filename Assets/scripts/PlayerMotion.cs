@@ -296,8 +296,6 @@ public class PlayerMotion : MonoBehaviour
            
             rbd.gravityScale = 1;
             rbd.velocity = new Vector2(Horiwim, Vertiswim);
-
-
         }
     }
 
