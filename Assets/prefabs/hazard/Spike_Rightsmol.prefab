@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8649534004944397905}
   - component: {fileID: 4841061489165864665}
   - component: {fileID: 7004113012709361209}
-  - component: {fileID: 9097494257545202313}
   m_Layer: 0
   m_Name: Spike_Rightsmol
   m_TagString: Untagged
@@ -132,17 +131,3 @@ PolygonCollider2D:
       - {x: 0.12687302, y: -0.004691124}
       - {x: 0.1258316, y: 0.0037486553}
       - {x: -0.08563995, y: 0.10412341}
---- !u!114 &9097494257545202313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8649534004944397906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa2f4e4118106ab4688be4e42fa029cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  playertransform: {fileID: 0}

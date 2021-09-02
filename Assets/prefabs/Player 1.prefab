@@ -45,7 +45,7 @@ GameObject:
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7979670468074047912
 Transform:
   m_ObjectHideFlags: 0
@@ -72,8 +72,8 @@ GameObject:
   - component: {fileID: 7979670469030190941}
   - component: {fileID: 7979670469030190942}
   - component: {fileID: 7979670469030190915}
-  - component: {fileID: 7979670469030190913}
   - component: {fileID: 1790430429}
+  - component: {fileID: 7979670469030190913}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -189,6 +189,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!70 &1790430429
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7979670469030190943}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 7abdb5bb695ea36428b0cd1d463b8a7a, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.6981468, y: 0.73}
+  m_Direction: 0
 --- !u!114 &7979670469030190913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,10 +222,7 @@ MonoBehaviour:
   horizontaldamping: 0
   nofric: {fileID: 6200000, guid: bf1c1892efe54fc46ad7673330efc0bc, type: 2}
   fullfric: {fileID: 6200000, guid: 418a92fee3fa24547b80aeb7d160efe6, type: 2}
-  fallMultiply: 2.5
-  lowJumpMultiply: 3
-  isgrounded: 0
-  isgroundedremember: 0
+  iswater: 0
   groundcheck: {fileID: 7979670468074047912}
   watercheck: {fileID: 7979670467521771245}
   checkradius: 0.25
@@ -221,37 +234,10 @@ MonoBehaviour:
     m_Bits: 16
   spr: {fileID: 7979670469030190941}
   anim: {fileID: 0}
-  isjumping: 0
-  isfalling: 0
-  lastypos: 0
-  jumpRememberTime: 0
+  jumpSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  coinSound: {fileID: 0}
+  Bgm: {fileID: 0}
   currentanim: 0
-  wonlevel: 0
-  canmove: 1
-  active: 1
-  respawning: 0
-  timetorespawn: 2
-  respawntime: 0
-  startpos: {x: -2.491718, y: 1.18}
-  currTime: 0
-  maxTime: 2
-  runningtimer: 0
   collidersize: {x: 0, y: 0}
   slopeCheckDistance: 0.2
-  isOnSlope: 0
---- !u!70 &1790430429
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7979670469030190943}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.6981468, y: 0.73}
-  m_Direction: 0

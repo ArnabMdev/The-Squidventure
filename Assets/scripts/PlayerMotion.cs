@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerMotion : MonoBehaviour
 {
-    public bool underwater=false;
+    private bool underwater=false;
     public float velocity;
     public float jumpforce;
     [Range(0,1)]public float horizontaldamping=0;
@@ -17,12 +17,12 @@ public class PlayerMotion : MonoBehaviour
     [SerializeField]
     private PhysicsMaterial2D fullfric;
     private float i, j,k;
-    public float fallMultiply=2.5f;
-    public float lowJumpMultiply=2f;
+    private float fallMultiply=2.5f;
+    private float lowJumpMultiply=2f;
 
     private Rigidbody2D rbd;
-    public bool isgrounded;
-    public float isgroundedremember;
+    private bool isgrounded;
+    private float isgroundedremember;
     [SerializeField]private bool iswater;
     public Transform groundcheck;
     public Transform watercheck;
@@ -31,38 +31,47 @@ public class PlayerMotion : MonoBehaviour
     public LayerMask whatisWater;
 
     public SpriteRenderer spr;
-    public Animator anim;
-    public bool isjumping;
-    public bool isfalling;
-    public float lastypos=0;
-    public float jumpRememberTime;
+    private Animator anim;
+    private bool isjumping;
+    private bool isfalling;
+    private float lastypos=0;
+    private float jumpRememberTime;
+
+    public AudioSource jumpSound;
+    public AudioSource deathSound;
+    public AudioSource coinSound;
+    public AudioSource Bgm;
+
+    public FallingPlat[] plats;
     public enum Animations
     {
         idle = 0,
         jump =1,
         fall = 2,
-        run = 3
+        run = 3,
+        swim = 4,
+        swimleft =5
     }
     public Animations currentanim;
 
     private Transform flagloco;
-    public bool wonlevel = false;
-    public bool canmove = true;
+    private bool wonlevel = false;
+    private bool canmove = true;
 
-    public bool active = true;
-    public bool respawning = false;
-    public float timetorespawn = 2;
-    public float respawntime = 0;
-    public Vector2 startpos;
+    private bool active = true;
+    private bool respawning = false;
+    private float timetorespawn = 2;
+    private float respawntime = 0;
+    private Vector2 startpos;
 
-    public float currTime = 0;
-    public float maxTime = 2f;
-    public bool runningtimer;
+    private float currTime = 0;
+    private float maxTime = 2f;
+    private bool runningtimer;
     public Vector2 collidersize;
     public float slopeCheckDistance;
     private float slopedownAngle;
     private Vector2 slopeNormalPerp;
-    public bool isOnSlope;
+    private bool isOnSlope;
     private float SlopeDownAngleOld;
     private float SlopeSideAngle;
 
@@ -116,7 +125,7 @@ public class PlayerMotion : MonoBehaviour
     }
     // Update is called once per frame
     void FixedUpdate()
-    { 
+    {
         //respawn delay
         if (runningtimer)
         {
@@ -125,8 +134,13 @@ public class PlayerMotion : MonoBehaviour
             {
                 runningtimer = false;
                 active = true;
+                /*Bgm.Play();*/
                 rbd.isKinematic = false;
                 transform.position = startpos;
+                foreach (FallingPlat plat in plats)
+                {
+                    plat.respawn();
+                }
             }
         }
 
@@ -136,13 +150,13 @@ public class PlayerMotion : MonoBehaviour
             if(transform.position.x != flagloco.position.x)
             {
                 ChangeAnim(Animations.run);
-                Vector2.MoveTowards(transform.position, new Vector2(flagloco.position.x, flagloco.position.y), 2f);
+                Vector2.MoveTowards(transform.position, new Vector2(flagloco.position.x, flagloco.position.y), 1.8f);
 
             }
             if(Mathf.Abs(transform.position.x - flagloco.position.x)<=1)
             {
                 ChangeAnim(Animations.idle);
-                rbd.velocity = new Vector2(0f,0f);
+                rbd.velocity = new Vector2(0f,0f);  
                 GameMaster.WonLevel();
                 wonlevel = false;
 
@@ -185,7 +199,9 @@ public class PlayerMotion : MonoBehaviour
         //ground and watercheck
         isgrounded = Physics2D.OverlapCircle(groundcheck.position, checkradius, whatIsGround);
         iswater = Physics2D.OverlapCircle(watercheck.position, checkradius, whatisWater);
-        if(isgrounded)
+        underwater = iswater;
+
+        if (isgrounded)
         {
             isgroundedremember = 0.2f;
         }
@@ -219,6 +235,7 @@ public class PlayerMotion : MonoBehaviour
             jumpRememberTime =0;
             isgroundedremember = 0f;
             rbd.velocity = Vector2.up * jumpforce;
+            jumpSound.Play();
         }
 
         if(rbd.velocity.y<0)
@@ -236,29 +253,29 @@ public class PlayerMotion : MonoBehaviour
         
 
         //flip
-        if (i > 0)
+        if (i > 0 && !underwater)
         {
             spr.flipX = false;
         }
-        else if (i < 0)
+        else if (i < 0 && !underwater)
         {
             spr.flipX = true;
         }
 
         //animations
-        if (isjumping )
+        if (isjumping && !underwater)
         {
             ChangeAnim(Animations.jump);
         }
-        else if(isfalling )
+        else if(isfalling && !underwater)
         {
             ChangeAnim(Animations.fall);
         }
-        else if (rbd.velocity.x != 0 &&isgrounded)
+        else if (rbd.velocity.x != 0 &&isgrounded && !underwater)
         {
             ChangeAnim(Animations.run);
         }
-        else if(Mathf.Round(rbd.velocity.x) == 0 && rbd.velocity.y==0)
+        else if(Mathf.Round(rbd.velocity.x) == 0 && rbd.velocity.y==0 && !underwater)
         {
             ChangeAnim(Animations.idle);
         }
@@ -282,7 +299,7 @@ public class PlayerMotion : MonoBehaviour
         if (underwater)
         {
 
-            float Horiwim = i * velocity * 0.5f;
+            float Horiwim = i * velocity ;
             float Vertiswim;
             if (Mathf.Abs(j) > Mathf.Abs(k))
             {
@@ -293,8 +310,15 @@ public class PlayerMotion : MonoBehaviour
                 Vertiswim = k* velocity * 0.5f;
 
             }
-           
-            rbd.gravityScale = 1;
+            if(i>0)
+            {
+                ChangeAnim(Animations.swim);
+            }
+            else
+            {
+                ChangeAnim(Animations.swimleft);
+            }
+            rbd.gravityScale = 1.3f;
             rbd.velocity = new Vector2(Horiwim, Vertiswim);
         }
     }
@@ -376,11 +400,15 @@ public class PlayerMotion : MonoBehaviour
     }
     public void death()
     {
+        Bgm.Stop();
+
         active = false;
         rbd.isKinematic = true;
         rbd.velocity = Vector2.zero;
         runningtimer = true;
         currTime = 0;
+        deathSound.Play();
+        
        
     }
 
@@ -398,6 +426,7 @@ public class PlayerMotion : MonoBehaviour
         {
             GameMaster.coins++;
             Destroy(collision.gameObject);
+            coinSound.Play();
         }
 
         if (collision.gameObject.tag == "Underwater")

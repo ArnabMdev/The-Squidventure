@@ -8,7 +8,7 @@ public class GameEnd : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.name == "Player")
+        if(collision.gameObject.tag == "Player")
         {
             collision.gameObject.GetComponent<PlayerMotion>().Wonlevel(flagloc);
             Debug.Log("win");
