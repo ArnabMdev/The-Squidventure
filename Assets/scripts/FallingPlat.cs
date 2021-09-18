@@ -7,11 +7,13 @@ public class FallingPlat : MonoBehaviour
     private Rigidbody2D rbd;
     public Transform startLoc;
     public Vector2 respawnpoint;
+    private BoxCollider2D collider2d;
     // Start is called before the first frame update
     void Start()
     {
         startLoc = GetComponent<Transform>().transform;
         rbd = GetComponent<Rigidbody2D>();
+        collider2d = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -26,6 +28,10 @@ public class FallingPlat : MonoBehaviour
         {
             /*collision.collider.transform.SetParent(transform);*/
             Invoke("DropPlat", 1f);
+        }
+        else
+        {
+            collider2d.enabled = false;
         }
     }
     private void OnCollisionExit2D(Collision2D collision)

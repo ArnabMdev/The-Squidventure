@@ -21,6 +21,18 @@ public class GameMaster :MonoBehaviour
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
+        if(PlayerPrefs.HasKey("SavedLevel"))
+        {
+            levelNo = PlayerPrefs.GetInt("SavedLevel");
+        }
+        if (PlayerPrefs.HasKey("SavedCoins"))
+        {
+            coins = PlayerPrefs.GetInt("SavedCoins");
+        }
+        if (PlayerPrefs.HasKey("SavedHealth"))
+        {
+            health = PlayerPrefs.GetFloat("SavedHealth");
+        }
         levelselection();
     }
     // Update is called once per frame
@@ -48,17 +60,22 @@ public class GameMaster :MonoBehaviour
 
         }
 
+        
+
     }
 
-
     public static void WonLevel()
-    {
-        
+    { 
         GameMaster.runningtransitiontimer = true;
         GameMaster.levelNo++;
+        PlayerPrefs.SetInt("SavedLevel", levelNo);
+        PlayerPrefs.SetInt("SavedCoins", coins);
+        PlayerPrefs.SetFloat("SavedHealth", health);
         levelwon = true;
 
     }
+
+
 
     public static void WonLevelTransition()
     {

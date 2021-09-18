@@ -53,6 +53,7 @@ public class PlayerMotion : MonoBehaviour
         swimleft =5
     }
     public Animations currentanim;
+    public bool UnderwaterLevel;
 
     private Transform flagloco;
     private bool wonlevel = false;
@@ -74,6 +75,7 @@ public class PlayerMotion : MonoBehaviour
     private bool isOnSlope;
     private float SlopeDownAngleOld;
     private float SlopeSideAngle;
+    private bool paused = false;
 
     // Start is called before the first frame update
     void Start()
@@ -93,6 +95,16 @@ public class PlayerMotion : MonoBehaviour
     }
     void Update()
     {
+        if(Input.GetKeyDown("escape") && !paused)
+        {
+            PauseGame();
+            paused = true;
+        }
+        else if(Input.GetKeyDown("escape") && paused)
+        {
+            ResumeGame();
+            paused = false;
+        }
         //respawning
         if(respawning)
         {
@@ -137,6 +149,7 @@ public class PlayerMotion : MonoBehaviour
                 /*Bgm.Play();*/
                 rbd.isKinematic = false;
                 transform.position = startpos;
+                transform.rotation = new Quaternion(0, 0, 0, 0);
                 foreach (FallingPlat plat in plats)
                 {
                     plat.respawn();
@@ -199,7 +212,7 @@ public class PlayerMotion : MonoBehaviour
         //ground and watercheck
         isgrounded = Physics2D.OverlapCircle(groundcheck.position, checkradius, whatIsGround);
         iswater = Physics2D.OverlapCircle(watercheck.position, checkradius, whatisWater);
-        underwater = iswater;
+        underwater = UnderwaterLevel;
 
         if (isgrounded)
         {
@@ -253,11 +266,11 @@ public class PlayerMotion : MonoBehaviour
         
 
         //flip
-        if (i > 0 && !underwater)
+        if (i > 0 && !underwater && !iswater)
         {
             spr.flipX = false;
         }
-        else if (i < 0 && !underwater)
+        else if (i < 0 && !underwater && !iswater)
         {
             spr.flipX = true;
         }
@@ -287,7 +300,9 @@ public class PlayerMotion : MonoBehaviour
             Debug.Log("y");
             GameMaster.TakeDamage();
         }
-        if (iswater && !underwater)
+
+        //water movement
+        if (iswater)
         {
             swim();
 
@@ -298,8 +313,8 @@ public class PlayerMotion : MonoBehaviour
         //Underwater movement
         if (underwater)
         {
-
-            float Horiwim = i * velocity ;
+            spr.flipX = false;
+            float Horiwim = i * velocity;
             float Vertiswim;
             if (Mathf.Abs(j) > Mathf.Abs(k))
             {
@@ -307,10 +322,10 @@ public class PlayerMotion : MonoBehaviour
             }
             else
             {
-                Vertiswim = k* velocity * 0.5f;
+                Vertiswim = k * velocity * 0.5f;
 
             }
-            if(i>0)
+            if (i > 0)
             {
                 ChangeAnim(Animations.swim);
             }
@@ -384,18 +399,27 @@ public class PlayerMotion : MonoBehaviour
 
     private void swim()
     {
-        ChangeAnim(Animations.jump);
+        spr.flipX = false;
+
         /*spr.transform.rotation = new Quaternion(0f, 0f, 90f, 0f);*/
         k = Mathf.Clamp(k, 0, 0.8f);
         j = Mathf.Clamp(j, -0.8f, 0.8f);
         if (Mathf.Abs(j) > Mathf.Abs( k))
         {
-            rbd.velocity = rbd.velocity + Vector2.up * j;
+            rbd.velocity = new Vector2(rbd.velocity.x, j * 7f);
         }
         else
         {
-            rbd.velocity = rbd.velocity + Vector2.up * k;
+            rbd.velocity = new Vector2(rbd.velocity.x, k * 7f);
 
+        }
+        if (rbd.velocity.x > 0)
+        {
+            ChangeAnim(Animations.swim);
+        }
+        else if(rbd.velocity.x<=0)
+        {
+            ChangeAnim(Animations.swimleft);
         }
     }
     public void death()
@@ -407,6 +431,7 @@ public class PlayerMotion : MonoBehaviour
         rbd.velocity = Vector2.zero;
         runningtimer = true;
         currTime = 0;
+        transform.rotation = new Quaternion(0, 0, 0, 0);
         deathSound.Play();
         
        
@@ -456,7 +481,15 @@ public class PlayerMotion : MonoBehaviour
 
 
     }
+    void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
 
-   
+    void ResumeGame()
+    {
+        Time.timeScale = 1;
+    }
+
 
 }

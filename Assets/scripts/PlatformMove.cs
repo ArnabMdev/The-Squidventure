@@ -4,38 +4,25 @@ using UnityEngine;
 
 public class PlatformMove : MonoBehaviour
 {
-    private Rigidbody2D rbody;
-    public float upperlim, lowerlim;
-    public bool leftright;
-    public bool onPath = false;[SerializeField]
+    public bool onPath = false;
+    [SerializeField]
     private Transform[] routes;
     private int routeToGo;
     private float tParam;
     private Vector2 objectPosition;
     [SerializeField] private float speedModifier;
     private bool coroutineAllowed;
-    public bool fallOnTouch = false;
 
     // Start is called before the first frame update
     void Start()
-    {
-
-        rbody = GetComponent<Rigidbody2D>();
-        if(!leftright && !onPath /*&& !fallOnTouch*/)
-        {
-            rbody.velocity = new Vector2(0f, 2f);
-        }
-        else if(onPath /*&&*/ /*!fallOnTouch*/)
+    { 
+        if(onPath)
         {
             routeToGo = 0;
             tParam = 0f;
             coroutineAllowed = true;
         }
-        else if(leftright && !onPath /*&& !fallOnTouch*/)
-        {
-            rbody.velocity = new Vector2(2f, 0f);
-        }
-
+        
     }
 
     private void Update()
@@ -48,30 +35,6 @@ public class PlatformMove : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(leftright &&!onPath)
-        {
-            if (transform.position.x >= upperlim)
-            {
-                rbody.velocity = new Vector2(-2f, 0f);
-            }
-            if (transform.position.x <= lowerlim)
-            {
-                rbody.velocity = new Vector2(2f, 0f);
-
-            }
-        }
-        else if(!leftright && !onPath)
-        {
-            if (transform.position.y >= upperlim)
-            {
-                rbody.velocity = new Vector2(0f, -2f);
-            }
-            if (transform.position.y <= lowerlim)
-            {
-                rbody.velocity = new Vector2(0f, 2f);
-
-            }
-        }
        
     }
     private IEnumerator GoByTheRoute(int routeNum)

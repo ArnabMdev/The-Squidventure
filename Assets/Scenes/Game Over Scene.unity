@@ -686,6 +686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a7d9e98c9e00da41b8f903865b58b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttons: []
 --- !u!114 &1383604467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -896,6 +897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a7d9e98c9e00da41b8f903865b58b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttons: []
 --- !u!4 &1774808230
 Transform:
   m_ObjectHideFlags: 0
